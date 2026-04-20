@@ -1,0 +1,42 @@
+<!--
+<!DOCTYPE HTML>
+<HTML lang="en">
+<head>
+    <title>E-Commerce App</title>
+</head>
+<body>
+<div class="js-container"></div>
+
+<script src="https://unpkg.com/supersimpledev@8.6.4/external-library.js"> </script>
+
+<script src="https://unpkg.com/supersimpledev/react.js"></script>
+<script src="https://unpkg.com/supersimpledev/react-dom.js"></script>
+
+<script src="https://unpkg.com/supersimpledev/babel.js"></script>
+<script type="text/babel">
+    const container = document.querySelector('.js-container')
+    function ProductDetails(props) {
+        return (
+            <div style={{ border: '1px solid black', padding: '10px', margin: '10px', width: '150px' }}>
+                <p>{props.name}</p>
+                <p>Price: {props.discountPrice ? <del>${props.price}</del> : `$${props.price}`}</p>
+                {props.discountPrice && (
+                    <p>Discount price: ${props.discountPrice}</p>
+                )}
+                <button>Add to Cart</button>
+            </div>
+        );
+    }
+    function App() {
+        return (
+            <div style={{ display: 'flex', flexDirection: 'row' }}>
+                <ProductDetails name="Cotton socks" price={10.90} discountPrice={5.99} />
+                <ProductDetails name="Tennis balls" price={6.00} />
+                <ProductDetails name="Plain T-Shirt" price={7.99} />
+            </div>
+        );
+    }
+    ReactDOM.createRoot(container).render(<App/>)
+</script>
+</body>
+</HTML>-->
