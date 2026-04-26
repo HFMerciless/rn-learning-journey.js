@@ -1,0 +1,46 @@
+<!--
+<!DOCTYPE HTML>
+<HTML lang="en">
+<head>
+    <title>Practice Exercises</title>
+</head>
+<body>
+<div class="js-container"></div>
+
+<script src="https://unpkg.com/supersimpledev@8.6.4/external-library.js"> </script>
+
+<script src="https://unpkg.com/supersimpledev/react.js"></script>
+<script src="https://unpkg.com/supersimpledev/react-dom.js"></script>
+
+<script src="https://unpkg.com/supersimpledev/babel.js"></script>
+<script type="text/babel">
+    const movies = [
+        { id: 1, title: "Inception", year: 2010 },
+        { id: 2, title: "Interstellar", year: 2014 },
+        { id: 3, title: "The Dark Knight", year: 2008 },
+    ];
+
+    function MovieCard({ title, year }) {
+        return (
+            <div>
+                <h2>{title}</h2>
+                <p>{year}</p>
+            </div>
+        );
+    }
+
+    function App() {
+        return (
+            <div>
+                {movies.map((movie) => (
+                    <MovieCard key={movie.id} title={movie.title} year={movie.year} />
+                ))}
+            </div>
+        );
+    }
+
+    const container = document.querySelector('.js-container');
+    ReactDOM.createRoot(container).render(<App />);
+</script>
+</body>
+</HTML>-->
