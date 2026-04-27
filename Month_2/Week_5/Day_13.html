@@ -1,0 +1,45 @@
+<!--
+<!DOCTYPE HTML>
+<HTML lang="en">
+<head>
+    <title>Practice Exercises</title>
+</head>
+<body>
+<div class="js-container"></div>
+
+<script src="https://unpkg.com/supersimpledev@8.6.4/external-library.js"> </script>
+
+<script src="https://unpkg.com/supersimpledev/react.js"></script>
+<script src="https://unpkg.com/supersimpledev/react-dom.js"></script>
+
+<script src="https://unpkg.com/supersimpledev/babel.js"></script>
+<script type="text/babel">
+    function Counter({ label }) {
+        const [count, setCount] = React.useState(0);
+
+        return (
+            <div>
+                <h2>{label}</h2>
+                <p>Count: {count}</p>
+                <button onClick={() => setCount(count + 1)}>+</button>
+                <button onClick={() => setCount(count - 1)}>-</button>
+                <button onClick={() => setCount(0)}>Reset</button>
+            </div>
+        );
+    }
+
+    function App() {
+        return (
+            <div>
+                <Counter label="Apples 🍎" />
+                <Counter label="Bananas 🍌" />
+                <Counter label="Oranges 🍊" />
+            </div>
+        );
+    }
+
+    const container = document.querySelector('.js-container');
+    ReactDOM.createRoot(container).render(<App />);
+</script>
+</body>
+</HTML>-->
