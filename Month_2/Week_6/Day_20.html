@@ -1,0 +1,325 @@
+<!--
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Task Manager</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.development.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.development.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
+            padding: 40px 20px;
+            color: white;
+        }
+        h1 {
+            text-align: center;
+            font-size: 32px;
+            margin-bottom: 8px;
+            color: #e94560;
+        }
+        .subtitle {
+            text-align: center;
+            color: #aaa;
+            margin-bottom: 32px;
+            font-size: 14px;
+        }
+        .app { max-width: 640px; margin: 0 auto; }
+
+        /* Input */
+        .input-row {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+        .input-row input {
+            flex: 1;
+            padding: 12px 16px;
+            border-radius: 10px;
+            border: 2px solid #0f3460;
+            background: #16213e;
+            color: white;
+            font-size: 15px;
+            outline: none;
+        }
+        .input-row input:focus { border-color: #e94560; }
+        .input-row input::placeholder { color: #555; }
+        .add-btn {
+            padding: 12px 20px;
+            background: #e94560;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 20px;
+            cursor: pointer;
+        }
+        .add-btn:hover { background: #c73652; }
+
+        /* Filter tabs */
+        .filters {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+        .filter-btn {
+            flex: 1;
+            padding: 8px;
+            border-radius: 8px;
+            border: 2px solid #0f3460;
+            background: transparent;
+            color: #aaa;
+            cursor: pointer;
+            font-size: 13px;
+        }
+        .filter-btn.active {
+            background: #e94560;
+            border-color: #e94560;
+            color: white;
+            font-weight: 500;
+        }
+
+        /* Task card */
+        .task-card {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: #16213e;
+            border: 2px solid #0f3460;
+            border-radius: 12px;
+            padding: 14px 16px;
+            margin-bottom: 10px;
+            transition: border-color 0.2s;
+        }
+        .task-card:hover { border-color: #e94560; }
+        .task-card.done { opacity: 0.5; }
+        .task-card.done .task-text { text-decoration: line-through; color: #777; }
+
+        .priority-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+        .dot-high   { background: #e94560; }
+        .dot-medium { background: #f5a623; }
+        .dot-low    { background: #4caf50; }
+
+        .task-text { flex: 1; font-size: 15px; }
+
+        .priority-select {
+            background: #0f3460;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 4px 8px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+        .complete-btn {
+            background: #4caf50;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 6px 10px;
+            cursor: pointer;
+            font-size: 13px;
+        }
+        .complete-btn:hover { background: #388e3c; }
+        .undo-btn {
+            background: #f5a623;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 6px 10px;
+            cursor: pointer;
+            font-size: 13px;
+        }
+        .delete-btn {
+            background: #e94560;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 6px 10px;
+            cursor: pointer;
+            font-size: 13px;
+        }
+        .delete-btn:hover { background: #c73652; }
+
+        /* Stats */
+        .stats {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .stat-box {
+            flex: 1;
+            background: #16213e;
+            border: 2px solid #0f3460;
+            border-radius: 10px;
+            padding: 12px;
+            text-align: center;
+        }
+        .stat-box .num { font-size: 28px; font-weight: 700; }
+        .stat-box .label { font-size: 11px; color: #aaa; margin-top: 2px; }
+        .num-total   { color: white; }
+        .num-done    { color: #4caf50; }
+        .num-pending { color: #e94560; }
+
+        .empty { text-align: center; color: #555; padding: 40px 0; font-size: 15px; }
+    </style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+    const { useState } = React;
+
+    // ── TaskInput ──────────────────────────────────────────
+    function TaskInput({ onAdd }) {
+        const [text, setText] = useState("");
+
+        const handleAdd = () => {
+            if (text.trim() === "") return;
+            onAdd(text.trim());
+            setText("");
+        };
+
+        const handleKey = (e) => {
+            if (e.key === "Enter") handleAdd();
+        };
+
+        return (
+            <div className="input-row">
+                <input
+                    value={text}
+                    onChange={e => setText(e.target.value)}
+                    onKeyDown={handleKey}
+                    placeholder="Add a new task..."
+                />
+                <button className="add-btn" onClick={handleAdd}>+</button>
+            </div>
+        );
+    }
+
+    // ── Stats ──────────────────────────────────────────────
+    function Stats({ tasks }) {
+        const total   = tasks.length;
+        const done    = tasks.filter(t => t.done).length;
+        const pending = total - done;
+
+        return (
+            <div className="stats">
+                <div className="stat-box">
+                    <div className={`num num-total`}>{total}</div>
+                    <div className="label">Total</div>
+                </div>
+                <div className="stat-box">
+                    <div className={`num num-done`}>{done}</div>
+                    <div className="label">Done</div>
+                </div>
+                <div className="stat-box">
+                    <div className={`num num-pending`}>{pending}</div>
+                    <div className="label">Pending</div>
+                </div>
+            </div>
+        );
+    }
+
+    // ── TaskCard ───────────────────────────────────────────
+    function TaskCard({ task, onDelete, onToggle, onPriority }) {
+        return (
+            <div className={`task-card ${task.done ? "done" : ""}`}>
+                <div className={`priority-dot dot-${task.priority}`} />
+                <span className="task-text">{task.text}</span>
+                <select
+                    className="priority-select"
+                    value={task.priority}
+                    onChange={e => onPriority(task.id, e.target.value)}
+                >
+                    <option value="low">Low</option>
+                    <option value="medium">Medium</option>
+                    <option value="high">High</option>
+                </select>
+                {task.done
+                    ? <button className="undo-btn"   onClick={() => onToggle(task.id)}>Undo</button>
+                    : <button className="complete-btn" onClick={() => onToggle(task.id)}>Done</button>
+                }
+                <button className="delete-btn" onClick={() => onDelete(task.id)}>✕</button>
+            </div>
+        );
+    }
+
+    // ── App ────────────────────────────────────────────────
+    function App() {
+        const [tasks,  setTasks]  = useState([]);
+        const [filter, setFilter] = useState("all");
+
+        const handleAdd = (text) => {
+            setTasks(prev => {
+                const id = prev.length === 0 ? 1 : prev[prev.length - 1].id + 1;
+                return [...prev, { id, text, done: false, priority: "medium" }];
+            });
+        };
+
+        const handleDelete = (id) => {
+            setTasks(prev => prev.filter(t => t.id !== id));
+        };
+
+        const handleToggle = (id) => {
+            setTasks(prev => prev.map(t =>
+                t.id === id ? { ...t, done: !t.done } : t
+            ));
+        };
+
+        const handlePriority = (id, priority) => {
+            setTasks(prev => prev.map(t =>
+                t.id === id ? { ...t, priority } : t
+            ));
+        };
+
+        const filtered = tasks.filter(t => {
+            if (filter === "active")   return !t.done;
+            if (filter === "done")     return  t.done;
+            return true;
+        });
+
+        return (
+            <div className="app">
+                <h1>Task Manager</h1>
+                <p className="subtitle">Stay on top of your day</p>
+                <Stats tasks={tasks} />
+                <TaskInput onAdd={handleAdd} />
+                <div className="filters">
+                    {["all", "active", "done"].map(f => (
+                        <button
+                            key={f}
+                            className={`filter-btn ${filter === f ? "active" : ""}`}
+                            onClick={() => setFilter(f)}
+                        >
+                            {f.charAt(0).toUpperCase() + f.slice(1)}
+                        </button>
+                    ))}
+                </div>
+                {filtered.length === 0
+                    ? <p className="empty">No tasks here.</p>
+                    : filtered.map(task => (
+                        <TaskCard
+                            key={task.id}
+                            task={task}
+                            onDelete={handleDelete}
+                            onToggle={handleToggle}
+                            onPriority={handlePriority}
+                        />
+                    ))
+                }
+            </div>
+        );
+    }
+
+    ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+</script>
+</body>
+</html>-->
