@@ -1,0 +1,306 @@
+<!--
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Quiz App</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.development.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.development.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .card {
+            background: #1e1e3f;
+            border-radius: 16px;
+            padding: 36px;
+            width: 100%;
+            max-width: 520px;
+            color: white;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+        }
+        .progress {
+            font-size: 13px;
+            color: #aaa;
+            margin-bottom: 8px;
+        }
+        .progress-bar-bg {
+            background: #2e2e5e;
+            border-radius: 999px;
+            height: 6px;
+            margin-bottom: 24px;
+        }
+        .progress-bar-fill {
+            background: #7c4dff;
+            height: 6px;
+            border-radius: 999px;
+            transition: width 0.3s;
+        }
+        h2 {
+            font-size: 20px;
+            font-weight: 500;
+            margin-bottom: 24px;
+            line-height: 1.5;
+        }
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 24px;
+        }
+        .option-btn {
+            padding: 12px 16px;
+            border-radius: 10px;
+            border: 2px solid #2e2e5e;
+            background: #2e2e5e;
+            color: white;
+            font-size: 15px;
+            text-align: left;
+            cursor: pointer;
+            transition: border-color 0.2s, background 0.2s;
+        }
+        .option-btn:hover:not(:disabled) { border-color: #7c4dff; }
+        .option-btn.correct  { border-color: #4caf50; background: #1b3a1f; }
+        .option-btn.wrong    { border-color: #e94560; background: #3a1b1f; }
+        .option-btn.reveal   { border-color: #4caf50; background: #1b3a1f; }
+        .feedback {
+            font-size: 15px;
+            font-weight: 500;
+            margin-bottom: 20px;
+            min-height: 22px;
+        }
+        .feedback.correct { color: #4caf50; }
+        .feedback.wrong   { color: #e94560; }
+        .next-btn {
+            width: 100%;
+            padding: 12px;
+            background: #7c4dff;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .next-btn:hover { background: #6a3de8; }
+        .result {
+            text-align: center;
+        }
+        .result h2 {
+            font-size: 26px;
+            margin-bottom: 8px;
+        }
+        .result .score {
+            font-size: 56px;
+            font-weight: 700;
+            color: #7c4dff;
+            margin: 16px 0;
+        }
+        .result p {
+            color: #aaa;
+            margin-bottom: 28px;
+        }
+        .restart-btn {
+            padding: 12px 32px;
+            background: #7c4dff;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .restart-btn:hover { background: #6a3de8; }
+    </style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+    const { useState } = React;
+
+    const questions = [
+        {
+            id: 1,
+            question: "What hook do you use to manage state in React?",
+            options: ["useEffect", "useState", "useRef", "useContext"],
+            answer: "useState",
+        },
+        {
+            id: 2,
+            question: "Which method creates a new array without modifying the original?",
+            options: [".push()", ".pop()", ".map()", ".sort()"],
+            answer: ".map()",
+        },
+        {
+            id: 3,
+            question: "What does the 'key' prop do in a list?",
+            options: [
+                "Styles the element",
+                "Helps React track list items",
+                "Passes data to children",
+                "Triggers a re-render",
+            ],
+            answer: "Helps React track list items",
+        },
+        {
+            id: 4,
+            question: "How do you prevent a function from being called immediately in onClick?",
+            options: [
+                "onClick={fn()}",
+                "onClick={fn}",
+                "onClick='fn'",
+                "onClick={call fn}",
+            ],
+            answer: "onClick={fn}",
+        },
+        {
+            id: 5,
+            question: "What does .filter() return?",
+            options: [
+                "The first matching item",
+                "A modified version of the original array",
+                "A new array with items that pass the condition",
+                "Nothing",
+            ],
+            answer: "A new array with items that pass the condition",
+        },
+    ];
+
+    // ── ProgressBar ───────────────────────────────────────
+    function ProgressBar({ current, total }) {
+        const percent = (current / total) * 100;
+        return (
+            <>
+                <p className="progress">Question {current} of {total}</p>
+                <div className="progress-bar-bg">
+                    <div className="progress-bar-fill" style={{ width: `${percent}%` }} />
+                </div>
+            </>
+        );
+    }
+
+    // ── Question ──────────────────────────────────────────
+    function Question({ data, onAnswer }) {
+        const [selected, setSelected] = useState(null);
+
+        const handleSelect = (option) => {
+            if (selected) return;
+            setSelected(option);
+            onAnswer(option === data.answer);
+        };
+
+        const getClass = (option) => {
+            if (!selected) return "";
+            if (option === data.answer) return "correct";
+            if (option === selected)   return "wrong";
+            return "";
+        };
+
+        return (
+            <>
+                <h2>{data.question}</h2>
+                <div className="options">
+                    {data.options.map(option => (
+                        <button
+                            key={option}
+                            className={`option-btn ${getClass(option)}`}
+                            onClick={() => handleSelect(option)}
+                            disabled={!!selected}
+                        >
+                            {option}
+                        </button>
+                    ))}
+                </div>
+                <p className={`feedback ${selected ? (selected === data.answer ? "correct" : "wrong") : ""}`}>
+                    {selected
+                        ? selected === data.answer
+                            ? "✓ Correct!"
+                            : `✗ Wrong — correct answer: ${data.answer}`
+                        : ""}
+                </p>
+            </>
+        );
+    }
+
+    // ── Result ────────────────────────────────────────────
+    function Result({ score, total, onRestart }) {
+        const percent = Math.round((score / total) * 100);
+        const message = percent === 100
+            ? "Perfect score! 🎉"
+            : percent >= 60
+                ? "Good job! 👍"
+                : "Keep practicing! 💪";
+
+        return (
+            <div className="result">
+                <h2>Quiz Complete!</h2>
+                <div className="score">{score}/{total}</div>
+                <p>{message}</p>
+                <button className="restart-btn" onClick={onRestart}>Try Again</button>
+            </div>
+        );
+    }
+
+    // ── App ───────────────────────────────────────────────
+    function App() {
+        const [current,   setCurrent]   = useState(0);
+        const [score,     setScore]     = useState(0);
+        const [answered,  setAnswered]  = useState(false);
+        const [finished,  setFinished]  = useState(false);
+
+        const handleAnswer = (isCorrect) => {
+            if (isCorrect) setScore(prev => prev + 1);
+            setAnswered(true);
+        };
+
+        const handleNext = () => {
+            if (current + 1 >= questions.length) {
+                setFinished(true);
+            } else {
+                setCurrent(prev => prev + 1);
+                setAnswered(false);
+            }
+        };
+
+        const handleRestart = () => {
+            setCurrent(0);
+            setScore(0);
+            setAnswered(false);
+            setFinished(false);
+        };
+
+        if (finished) {
+            return (
+                <div className="card">
+                    <Result score={score} total={questions.length} onRestart={handleRestart} />
+                </div>
+            );
+        }
+
+        return (
+            <div className="card">
+                <ProgressBar current={current + 1} total={questions.length} />
+                <Question
+                    key={current}
+                    data={questions[current]}
+                    onAnswer={handleAnswer}
+                />
+                {answered && (
+                    <button className="next-btn" onClick={handleNext}>
+                        {current + 1 >= questions.length ? "See Results" : "Next →"}
+                    </button>
+                )}
+            </div>
+        );
+    }
+
+    ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+</script>
+</body>
+</html>-->
