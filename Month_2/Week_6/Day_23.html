@@ -1,0 +1,323 @@
+<!--
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Movie Watchlist</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.development.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.development.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #0d0d0d, #1a0a2e, #0d1a2e);
+            padding: 40px 20px;
+            color: white;
+        }
+        h1 { text-align: center; font-size: 30px; color: #f5a623; margin-bottom: 4px; }
+        .subtitle { text-align: center; color: #555; font-size: 13px; margin-bottom: 32px; }
+        .app { max-width: 600px; margin: 0 auto; }
+
+        /* Stats */
+        .stats {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 24px;
+        }
+        .stat-card {
+            flex: 1;
+            background: #12122a;
+            border: 1px solid #1e1e3f;
+            border-radius: 12px;
+            padding: 14px;
+            text-align: center;
+        }
+        .stat-num   { font-size: 26px; font-weight: 700; }
+        .stat-label { font-size: 11px; color: #555; text-transform: uppercase; margin-top: 2px; }
+        .num-total   { color: #f5a623; }
+        .num-watched { color: #4caf50; }
+        .num-pending { color: #e94560; }
+
+        /* Form */
+        .form {
+            background: #12122a;
+            border: 1px solid #1e1e3f;
+            border-radius: 14px;
+            padding: 20px;
+            margin-bottom: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .form input, .form select {
+            padding: 10px 14px;
+            border-radius: 8px;
+            border: 1px solid #1e1e3f;
+            background: #0d0d1a;
+            color: white;
+            font-size: 14px;
+            outline: none;
+            width: 100%;
+        }
+        .form input:focus, .form select:focus { border-color: #f5a623; }
+        .form input::placeholder { color: #444; }
+        .form-row { display: flex; gap: 10px; }
+        .add-btn {
+            padding: 11px;
+            background: #f5a623;
+            color: #0d0d0d;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+        .add-btn:hover { background: #d4891a; }
+
+        /* Filters */
+        .filters {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+        .filter-btn {
+            padding: 6px 16px;
+            border-radius: 999px;
+            border: 1px solid #1e1e3f;
+            background: transparent;
+            color: #777;
+            font-size: 12px;
+            cursor: pointer;
+        }
+        .filter-btn.active {
+            background: #f5a623;
+            border-color: #f5a623;
+            color: #0d0d0d;
+            font-weight: 700;
+        }
+
+        /* Movie card */
+        .movie-card {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            background: #12122a;
+            border: 1px solid #1e1e3f;
+            border-radius: 12px;
+            padding: 14px 16px;
+            margin-bottom: 10px;
+            transition: border-color 0.2s;
+        }
+        .movie-card:hover { border-color: #f5a623; }
+        .movie-card.watched { opacity: 0.5; }
+        .movie-card.watched .movie-title { text-decoration: line-through; color: #777; }
+
+        .genre-badge {
+            font-size: 10px;
+            padding: 3px 8px;
+            border-radius: 999px;
+            font-weight: 600;
+            text-transform: uppercase;
+            flex-shrink: 0;
+        }
+        .badge-action  { background: #e9456022; color: #e94560; border: 1px solid #e94560; }
+        .badge-comedy  { background: #f5a62322; color: #f5a623; border: 1px solid #f5a623; }
+        .badge-drama   { background: #4caf5022; color: #4caf50; border: 1px solid #4caf50; }
+        .badge-scifi   { background: #00e5ff22; color: #00e5ff; border: 1px solid #00e5ff; }
+        .badge-horror  { background: #a855f722; color: #a855f7; border: 1px solid #a855f7; }
+
+        .movie-info { flex: 1; }
+        .movie-title { font-size: 15px; font-weight: 500; margin-bottom: 3px; }
+        .movie-rating { font-size: 12px; color: #f5a623; }
+
+        .watch-btn {
+            padding: 6px 12px;
+            border-radius: 6px;
+            border: none;
+            font-size: 12px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        .watch-btn.mark   { background: #4caf5022; color: #4caf50; border: 1px solid #4caf50; }
+        .watch-btn.unmark { background: #1e1e3f;   color: #777; }
+        .watch-btn:hover  { opacity: 0.8; }
+
+        .del-btn {
+            background: #1e1e1e;
+            color: #e94560;
+            border: none;
+            border-radius: 6px;
+            padding: 6px 10px;
+            cursor: pointer;
+            font-size: 13px;
+        }
+        .del-btn:hover { background: #2e1e2e; }
+
+        .empty { text-align: center; color: #333; padding: 40px 0; font-size: 14px; }
+
+        /* Stars */
+        .stars { color: #f5a623; font-size: 13px; }
+    </style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+    const { useState } = React;
+
+    const GENRES = ["action", "comedy", "drama", "scifi", "horror"];
+
+    // ── Stats ─────────────────────────────────────────────
+    function Stats({ movies }) {
+        const total   = movies.length;
+        const watched = movies.filter(m => m.watched).length;
+        const pending = total - watched;
+
+        return (
+            <div className="stats">
+                <div className="stat-card">
+                    <div className="stat-num num-total">{total}</div>
+                    <div className="stat-label">Total</div>
+                </div>
+                <div className="stat-card">
+                    <div className="stat-num num-watched">{watched}</div>
+                    <div className="stat-label">Watched</div>
+                </div>
+                <div className="stat-card">
+                    <div className="stat-num num-pending">{pending}</div>
+                    <div className="stat-label">Pending</div>
+                </div>
+            </div>
+        );
+    }
+
+    // ── MovieForm ─────────────────────────────────────────
+    function MovieForm({ onAdd }) {
+        const [title,  setTitle]  = useState("");
+        const [genre,  setGenre]  = useState("action");
+        const [rating, setRating] = useState("5");
+
+        const handleAdd = () => {
+            if (title.trim() === "") return;
+            onAdd({ title: title.trim(), genre, rating: parseInt(rating) });
+            setTitle("");
+            setGenre("action");
+            setRating("5");
+        };
+
+        return (
+            <div className="form">
+                <input
+                    value={title}
+                    onChange={e => setTitle(e.target.value)}
+                    onKeyDown={e => e.key === "Enter" && handleAdd()}
+                    placeholder="Movie title..."
+                />
+                <div className="form-row">
+                    <select value={genre} onChange={e => setGenre(e.target.value)}>
+                        {GENRES.map(g => (
+                            <option key={g} value={g}>
+                                {g.charAt(0).toUpperCase() + g.slice(1)}
+                            </option>
+                        ))}
+                    </select>
+                    <select value={rating} onChange={e => setRating(e.target.value)}>
+                        {[1,2,3,4,5,6,7,8,9,10].map(n => (
+                            <option key={n} value={n}>Rating: {n}/10</option>
+                        ))}
+                    </select>
+                </div>
+                <button className="add-btn" onClick={handleAdd}>Add to Watchlist</button>
+            </div>
+        );
+    }
+
+    // ── MovieCard ─────────────────────────────────────────
+    function MovieCard({ movie, onDelete, onToggle }) {
+        const stars = "★".repeat(Math.round(movie.rating / 2)) + "☆".repeat(5 - Math.round(movie.rating / 2));
+
+        return (
+            <div className={`movie-card ${movie.watched ? "watched" : ""}`}>
+                <span className={`genre-badge badge-${movie.genre}`}>{movie.genre}</span>
+                <div className="movie-info">
+                    <div className="movie-title">{movie.title}</div>
+                    <div className="stars">{stars} <span style={{color:"#555"}}>{movie.rating}/10</span></div>
+                </div>
+                <button
+                    className={`watch-btn ${movie.watched ? "unmark" : "mark"}`}
+                    onClick={() => onToggle(movie.id)}
+                >
+                    {movie.watched ? "Unwatch" : "✓ Watched"}
+                </button>
+                <button className="del-btn" onClick={() => onDelete(movie.id)}>✕</button>
+            </div>
+        );
+    }
+
+    // ── App ───────────────────────────────────────────────
+    function App() {
+        const [movies, setMovies] = useState([]);
+        const [filter, setFilter] = useState("all");
+
+        const handleAdd = (movie) => {
+            setMovies(prev => {
+                const id = prev.length === 0 ? 1 : prev[prev.length - 1].id + 1;
+                return [...prev, { ...movie, id, watched: false }];
+            });
+        };
+
+        const handleDelete = (id) => {
+            setMovies(prev => prev.filter(m => m.id !== id));
+        };
+
+        const handleToggle = (id) => {
+            setMovies(prev => prev.map(m =>
+                m.id === id ? { ...m, watched: !m.watched } : m
+            ));
+        };
+
+        const filtered = movies.filter(m => {
+            if (filter === "watched")  return  m.watched;
+            if (filter === "pending")  return !m.watched;
+            if (GENRES.includes(filter)) return m.genre === filter;
+            return true;
+        });
+
+        return (
+            <div className="app">
+                <h1>🎬 Watchlist</h1>
+                <p className="subtitle">Keep track of movies you want to watch</p>
+                <Stats movies={movies} />
+                <MovieForm onAdd={handleAdd} />
+                <div className="filters">
+                    {["all", "watched", "pending", ...GENRES].map(f => (
+                        <button
+                            key={f}
+                            className={`filter-btn ${filter === f ? "active" : ""}`}
+                            onClick={() => setFilter(f)}
+                        >
+                            {f.charAt(0).toUpperCase() + f.slice(1)}
+                        </button>
+                    ))}
+                </div>
+                {filtered.length === 0
+                    ? <p className="empty">Nothing here.</p>
+                    : filtered.map(movie => (
+                        <MovieCard
+                            key={movie.id}
+                            movie={movie}
+                            onDelete={handleDelete}
+                            onToggle={handleToggle}
+                        />
+                    ))
+                }
+            </div>
+        );
+    }
+
+    ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+</script>
+</body>
+</html>-->
