@@ -1,0 +1,301 @@
+<!--
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Recipe Box</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.development.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.development.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #1a0a00, #2e1500, #1a0a00);
+            padding: 40px 20px;
+            color: white;
+        }
+        h1 { text-align: center; font-size: 30px; color: #ff6b35; margin-bottom: 4px; }
+        .subtitle { text-align: center; color: #555; font-size: 13px; margin-bottom: 32px; }
+        .app { max-width: 620px; margin: 0 auto; }
+
+        /* Stats */
+        .stats { display: flex; gap: 10px; margin-bottom: 24px; }
+        .stat-card {
+            flex: 1; background: #1a0f00; border: 1px solid #2e1e00;
+            border-radius: 12px; padding: 14px; text-align: center;
+        }
+        .stat-num   { font-size: 26px; font-weight: 700; }
+        .stat-label { font-size: 11px; color: #555; text-transform: uppercase; margin-top: 2px; }
+        .num-total    { color: #ff6b35; }
+        .num-fav      { color: #e94560; }
+        .num-cooktime { color: #4caf50; }
+
+        /* Form */
+        .form {
+            background: #1a0f00; border: 1px solid #2e1e00;
+            border-radius: 14px; padding: 20px; margin-bottom: 24px;
+            display: flex; flex-direction: column; gap: 10px;
+        }
+        .form input, .form select, .form textarea {
+            padding: 10px 14px; border-radius: 8px; border: 1px solid #2e1e00;
+            background: #0f0800; color: white; font-size: 14px; outline: none; width: 100%;
+        }
+        .form input:focus, .form select:focus, .form textarea:focus { border-color: #ff6b35; }
+        .form input::placeholder, .form textarea::placeholder { color: #444; }
+        .form textarea { resize: none; height: 70px; font-family: sans-serif; }
+        .form-row { display: flex; gap: 10px; }
+        .add-btn {
+            padding: 11px; background: #ff6b35; color: #0f0800;
+            border: none; border-radius: 8px; font-size: 15px; font-weight: 700; cursor: pointer;
+        }
+        .add-btn:hover { background: #e05a28; }
+
+        /* Filters */
+        .filters { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+        .filter-btn {
+            padding: 6px 16px; border-radius: 999px; border: 1px solid #2e1e00;
+            background: transparent; color: #777; font-size: 12px; cursor: pointer;
+        }
+        .filter-btn.active {
+            background: #ff6b35; border-color: #ff6b35; color: #0f0800; font-weight: 700;
+        }
+
+        /* Recipe card */
+        .recipe-card {
+            background: #1a0f00; border: 1px solid #2e1e00;
+            border-radius: 12px; padding: 16px; margin-bottom: 10px; transition: border-color 0.2s;
+        }
+        .recipe-card:hover { border-color: #ff6b35; }
+        .recipe-top { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+
+        .meal-badge {
+            font-size: 10px; padding: 3px 8px; border-radius: 999px;
+            font-weight: 600; text-transform: uppercase; flex-shrink: 0;
+        }
+        .badge-breakfast { background: #f5a62322; color: #f5a623; border: 1px solid #f5a623; }
+        .badge-lunch     { background: #4caf5022; color: #4caf50; border: 1px solid #4caf50; }
+        .badge-dinner    { background: #a855f722; color: #a855f7; border: 1px solid #a855f7; }
+        .badge-snack     { background: #00e5ff22; color: #00e5ff; border: 1px solid #00e5ff; }
+
+        .recipe-name { flex: 1; font-size: 15px; font-weight: 500; }
+        .cooktime    { font-size: 12px; color: #4caf50; }
+
+        .fav-btn {
+            background: none; border: none; font-size: 18px; cursor: pointer; padding: 0 4px;
+        }
+        .del-btn {
+            background: #1a1a1a; color: #e94560; border: none;
+            border-radius: 6px; padding: 6px 10px; cursor: pointer; font-size: 13px;
+        }
+        .del-btn:hover { background: #2e1e1e; }
+
+        .recipe-desc {
+            font-size: 13px; color: #777; line-height: 1.6; margin-bottom: 10px;
+        }
+
+        /* Ingredients */
+        .ingredients { display: flex; flex-wrap: wrap; gap: 6px; }
+        .ingredient-tag {
+            font-size: 11px; background: #2e1e00; border: 1px solid #3e2e00;
+            border-radius: 999px; padding: 3px 10px; color: #aaa;
+        }
+
+        .expand-btn {
+            background: none; border: none; color: #ff6b35;
+            font-size: 12px; cursor: pointer; padding: 0; margin-bottom: 8px;
+        }
+
+        .empty { text-align: center; color: #333; padding: 40px 0; font-size: 14px; }
+    </style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+    const { useState } = React;
+
+    const MEALS = ["breakfast", "lunch", "dinner", "snack"];
+
+    // ── Stats ─────────────────────────────────────────────
+    function Stats({ recipes }) {
+        const total    = recipes.length;
+        const favs     = recipes.filter(r => r.favorite).length;
+        const avgTime  = total === 0
+            ? 0
+            : Math.round(recipes.reduce((sum, r) => sum + r.cookTime, 0) / total);
+
+        return (
+            <div className="stats">
+                <div className="stat-card">
+                    <div className="stat-num num-total">{total}</div>
+                    <div className="stat-label">Recipes</div>
+                </div>
+                <div className="stat-card">
+                    <div className="stat-num num-fav">♥ {favs}</div>
+                    <div className="stat-label">Favourites</div>
+                </div>
+                <div className="stat-card">
+                    <div className="stat-num num-cooktime">{avgTime}m</div>
+                    <div className="stat-label">Avg Cook Time</div>
+                </div>
+            </div>
+        );
+    }
+
+    // ── RecipeForm ────────────────────────────────────────
+    function RecipeForm({ onAdd }) {
+        const [name,        setName]        = useState("");
+        const [meal,        setMeal]        = useState("breakfast");
+        const [cookTime,    setCookTime]    = useState("");
+        const [desc,        setDesc]        = useState("");
+        const [ingredients, setIngredients] = useState("");
+
+        const handleAdd = () => {
+            if (name.trim() === "" || cookTime === "" || isNaN(cookTime)) return;
+            onAdd({
+                name:        name.trim(),
+                meal,
+                cookTime:    parseInt(cookTime),
+                desc:        desc.trim(),
+                ingredients: ingredients.split(",").map(i => i.trim()).filter(i => i !== ""),
+            });
+            setName(""); setMeal("breakfast"); setCookTime(""); setDesc(""); setIngredients("");
+        };
+
+        return (
+            <div className="form">
+                <input
+                    value={name}
+                    onChange={e => setName(e.target.value)}
+                    onKeyDown={e => e.key === "Enter" && handleAdd()}
+                    placeholder="Recipe name (e.g. Avocado Toast)"
+                />
+                <div className="form-row">
+                    <select value={meal} onChange={e => setMeal(e.target.value)}>
+                        {MEALS.map(m => (
+                            <option key={m} value={m}>{m.charAt(0).toUpperCase() + m.slice(1)}</option>
+                        ))}
+                    </select>
+                    <input
+                        type="number"
+                        value={cookTime}
+                        onChange={e => setCookTime(e.target.value)}
+                        placeholder="Cook time (mins)"
+                    />
+                </div>
+                <input
+                    value={ingredients}
+                    onChange={e => setIngredients(e.target.value)}
+                    placeholder="Ingredients, comma separated (e.g. eggs, butter, salt)"
+                />
+                <textarea
+                    value={desc}
+                    onChange={e => setDesc(e.target.value)}
+                    placeholder="Short description or instructions..."
+                />
+                <button className="add-btn" onClick={handleAdd}>Add Recipe</button>
+            </div>
+        );
+    }
+
+    // ── RecipeCard ────────────────────────────────────────
+    function RecipeCard({ recipe, onDelete, onFavorite }) {
+        const [expanded, setExpanded] = useState(false);
+
+        return (
+            <div className="recipe-card">
+                <div className="recipe-top">
+                    <span className={`meal-badge badge-${recipe.meal}`}>{recipe.meal}</span>
+                    <span className="recipe-name">{recipe.name}</span>
+                    <span className="cooktime">⏱ {recipe.cookTime}m</span>
+                    <button className="fav-btn" onClick={() => onFavorite(recipe.id)}>
+                        {recipe.favorite ? "♥" : "♡"}
+                    </button>
+                    <button className="del-btn" onClick={() => onDelete(recipe.id)}>✕</button>
+                </div>
+
+                {recipe.desc !== "" && (
+                    <>
+                        <button className="expand-btn" onClick={() => setExpanded(prev => !prev)}>
+                            {expanded ? "▲ Hide details" : "▼ Show details"}
+                        </button>
+                        {expanded && <p className="recipe-desc">{recipe.desc}</p>}
+                    </>
+                )}
+
+                {recipe.ingredients.length > 0 && (
+                    <div className="ingredients">
+                        {recipe.ingredients.map((ing, i) => (
+                            <span key={i} className="ingredient-tag">{ing}</span>
+                        ))}
+                    </div>
+                )}
+            </div>
+        );
+    }
+
+    // ── App ───────────────────────────────────────────────
+    function App() {
+        const [recipes, setRecipes] = useState([]);
+        const [filter,  setFilter]  = useState("all");
+
+        const handleAdd = (recipe) => {
+            setRecipes(prev => {
+                const id = prev.length === 0 ? 1 : prev[prev.length - 1].id + 1;
+                return [...prev, { ...recipe, id, favorite: false }];
+            });
+        };
+
+        const handleDelete = (id) => {
+            setRecipes(prev => prev.filter(r => r.id !== id));
+        };
+
+        const handleFavorite = (id) => {
+            setRecipes(prev => prev.map(r =>
+                r.id === id ? { ...r, favorite: !r.favorite } : r
+            ));
+        };
+
+        const filtered = recipes.filter(r => {
+            if (filter === "favorites")   return r.favorite;
+            if (MEALS.includes(filter))   return r.meal === filter;
+            return true;
+        });
+
+        return (
+            <div className="app">
+                <h1>🍳 Recipe Box</h1>
+                <p className="subtitle">Save your favourite recipes</p>
+                <Stats recipes={recipes} />
+                <RecipeForm onAdd={handleAdd} />
+                <div className="filters">
+                    {["all", "favorites", ...MEALS].map(f => (
+                        <button
+                            key={f}
+                            className={`filter-btn ${filter === f ? "active" : ""}`}
+                            onClick={() => setFilter(f)}
+                        >
+                            {f.charAt(0).toUpperCase() + f.slice(1)}
+                        </button>
+                    ))}
+                </div>
+                {filtered.length === 0
+                    ? <p className="empty">No recipes here.</p>
+                    : filtered.map(recipe => (
+                        <RecipeCard
+                            key={recipe.id}
+                            recipe={recipe}
+                            onDelete={handleDelete}
+                            onFavorite={handleFavorite}
+                        />
+                    ))
+                }
+            </div>
+        );
+    }
+
+    ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+</script>
+</body>
+</html>-->
