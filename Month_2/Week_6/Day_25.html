@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Book Shelf</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.development.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.development.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #0a0a1a, #0d0d2e, #0a1428);
+            padding: 40px 20px;
+            color: white;
+        }
+        h1 { text-align: center; font-size: 30px; color: #a78bfa; margin-bottom: 4px; }
+        .subtitle { text-align: center; color: #555; font-size: 13px; margin-bottom: 32px; }
+        .app { max-width: 580px; margin: 0 auto; }
+
+        /* Stats */
+        .stats { display: flex; gap: 10px; margin-bottom: 24px; }
+        .stat-card {
+            flex: 1; background: #0d0d1a; border: 1px solid #1e1e3f;
+            border-radius: 12px; padding: 14px; text-align: center;
+        }
+        .stat-num   { font-size: 26px; font-weight: 700; }
+        .stat-label { font-size: 11px; color: #555; text-transform: uppercase; margin-top: 2px; }
+        .num-total  { color: #a78bfa; }
+        .num-read   { color: #4caf50; }
+        .num-want   { color: #f5a623; }
+
+        /* Form */
+        .form {
+            background: #0d0d1a; border: 1px solid #1e1e3f;
+            border-radius: 14px; padding: 20px; margin-bottom: 24px;
+            display: flex; flex-direction: column; gap: 10px;
+        }
+        .form input, .form select {
+            padding: 10px 14px; border-radius: 8px; border: 1px solid #1e1e3f;
+            background: #080814; color: white; font-size: 14px; outline: none; width: 100%;
+        }
+        .form input:focus, .form select:focus { border-color: #a78bfa; }
+        .form input::placeholder { color: #444; }
+        .form-row { display: flex; gap: 10px; }
+        .add-btn {
+            padding: 11px; background: #a78bfa; color: #080814;
+            border: none; border-radius: 8px; font-size: 15px; font-weight: 700; cursor: pointer;
+        }
+        .add-btn:hover { background: #8b5cf6; }
+
+        /* Filters */
+        .filters { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+        .filter-btn {
+            padding: 6px 16px; border-radius: 999px; border: 1px solid #1e1e3f;
+            background: transparent; color: #777; font-size: 12px; cursor: pointer;
+        }
+        .filter-btn.active {
+            background: #a78bfa; border-color: #a78bfa; color: #080814; font-weight: 700;
+        }
+
+        /* Book card */
+        .book-card {
+            display: flex; align-items: center; gap: 12px;
+            background: #0d0d1a; border: 1px solid #1e1e3f;
+            border-radius: 12px; padding: 14px 16px; margin-bottom: 10px; transition: border-color 0.2s;
+        }
+        .book-card:hover { border-color: #a78bfa; }
+
+        .genre-badge {
+            font-size: 10px; padding: 3px 8px; border-radius: 999px;
+            font-weight: 600; text-transform: uppercase; flex-shrink: 0;
+        }
+        .badge-fiction    { background: #a78bfa22; color: #a78bfa; border: 1px solid #a78bfa; }
+        .badge-nonfiction { background: #f5a62322; color: #f5a623; border: 1px solid #f5a623; }
+        .badge-sci-fi     { background: #00e5ff22; color: #00e5ff; border: 1px solid #00e5ff; }
+        .badge-fantasy    { background: #4caf5022; color: #4caf50; border: 1px solid #4caf50; }
+        .badge-biography  { background: #e9456022; color: #e94560; border: 1px solid #e94560; }
+
+        .book-info  { flex: 1; }
+        .book-title { font-size: 15px; font-weight: 500; margin-bottom: 2px; }
+        .book-author { font-size: 12px; color: #555; }
+
+        .read-btn {
+            padding: 6px 12px; border-radius: 6px; border: none;
+            font-size: 12px; cursor: pointer; font-weight: 600;
+        }
+        .read-btn.read   { background: #4caf5022; color: #4caf50; border: 1px solid #4caf50; }
+        .read-btn.unread { background: #1e1e3f;   color: #555;    border: 1px solid #1e1e3f; }
+        .read-btn:hover  { opacity: 0.8; }
+
+        .del-btn {
+            background: #1a1a2e; color: #e94560; border: none;
+            border-radius: 6px; padding: 6px 10px; cursor: pointer; font-size: 13px;
+        }
+        .del-btn:hover { background: #2e1e2e; }
+
+        .empty { text-align: center; color: #333; padding: 40px 0; font-size: 14px; }
+    </style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+    const { useState } = React;
+
+    const GENRES = ["fiction", "nonfiction", "sci-fi", "fantasy", "biography"];
+
+    // ── Stats ─────────────────────────────────────────────
+    function Stats({ books }) {
+        const total  = books.length;
+        const read   = books.filter(b => b.read).length;
+        const want   = total - read;
+
+        return (
+            <div className="stats">
+                <div className="stat-card">
+                    <div className="stat-num num-total">{total}</div>
+                    <div className="stat-label">Total</div>
+                </div>
+                <div className="stat-card">
+                    <div className="stat-num num-read">{read}</div>
+                    <div className="stat-label">Read</div>
+                </div>
+                <div className="stat-card">
+                    <div className="stat-num num-want">{want}</div>
+                    <div className="stat-label">Want to Read</div>
+                </div>
+            </div>
+        );
+    }
+
+    // ── BookForm ──────────────────────────────────────────
+    function BookForm({ onAdd }) {
+        const [title,  setTitle]  = useState("");
+        const [author, setAuthor] = useState("");
+        const [genre,  setGenre]  = useState("fiction");
+
+        const handleAdd = () => {
+            if (title.trim() === "") return;
+            onAdd({ title: title.trim(), author: author.trim(), genre });
+            setTitle(""); setAuthor(""); setGenre("fiction");
+        };
+
+        return (
+            <div className="form">
+                <input
+                    value={title}
+                    onChange={e => setTitle(e.target.value)}
+                    onKeyDown={e => e.key === "Enter" && handleAdd()}
+                    placeholder="Book title..."
+                />
+                <div className="form-row">
+                    <input
+                        value={author}
+                        onChange={e => setAuthor(e.target.value)}
+                        placeholder="Author (optional)"
+                    />
+                    <select value={genre} onChange={e => setGenre(e.target.value)}>
+                        {GENRES.map(g => (
+                            <option key={g} value={g}>{g.charAt(0).toUpperCase() + g.slice(1)}</option>
+                        ))}
+                    </select>
+                </div>
+                <button className="add-btn" onClick={handleAdd}>Add Book</button>
+            </div>
+        );
+    }
+
+    // ── BookCard ──────────────────────────────────────────
+    function BookCard({ book, onDelete, onToggle }) {
+        return (
+            <div className="book-card">
+                <span className={`genre-badge badge-${book.genre}`}>{book.genre}</span>
+                <div className="book-info">
+                    <div className="book-title">{book.title}</div>
+                    {book.author !== "" && <div className="book-author">by {book.author}</div>}
+                </div>
+                <button
+                    className={`read-btn ${book.read ? "read" : "unread"}`}
+                    onClick={() => onToggle(book.id)}
+                >
+                    {book.read ? "✓ Read" : "Mark read"}
+                </button>
+                <button className="del-btn" onClick={() => onDelete(book.id)}>✕</button>
+            </div>
+        );
+    }
+
+    // ── App ───────────────────────────────────────────────
+    function App() {
+        const [books,  setBooks]  = useState([]);
+        const [filter, setFilter] = useState("all");
+
+        const handleAdd = (book) => {
+            setBooks(prev => {
+                const id = prev.length === 0 ? 1 : prev[prev.length - 1].id + 1;
+                return [...prev, { ...book, id, read: false }];
+            });
+        };
+
+        const handleDelete = (id) => {
+            setBooks(prev => prev.filter(b => b.id !== id));
+        };
+
+        const handleToggle = (id) => {
+            setBooks(prev => prev.map(b =>
+                b.id === id ? { ...b, read: !b.read } : b
+            ));
+        };
+
+        const filtered = books.filter(b => {
+            if (filter === "read")   return  b.read;
+            if (filter === "unread") return !b.read;
+            if (GENRES.includes(filter)) return b.genre === filter;
+            return true;
+        });
+
+        return (
+            <div className="app">
+                <h1>📚 Book Shelf</h1>
+                <p className="subtitle">Track books you've read and want to read</p>
+                <Stats books={books} />
+                <BookForm onAdd={handleAdd} />
+                <div className="filters">
+                    {["all", "read", "unread", ...GENRES].map(f => (
+                        <button
+                            key={f}
+                            className={`filter-btn ${filter === f ? "active" : ""}`}
+                            onClick={() => setFilter(f)}
+                        >
+                            {f.charAt(0).toUpperCase() + f.slice(1)}
+                        </button>
+                    ))}
+                </div>
+                {filtered.length === 0
+                    ? <p className="empty">No books here.</p>
+                    : filtered.map(book => (
+                        <BookCard
+                            key={book.id}
+                            book={book}
+                            onDelete={handleDelete}
+                            onToggle={handleToggle}
+                        />
+                    ))
+                }
+            </div>
+        );
+    }
+
+    ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+</script>
+</body>
+</html>
