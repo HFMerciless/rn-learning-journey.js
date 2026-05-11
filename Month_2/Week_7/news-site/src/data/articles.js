@@ -1,0 +1,58 @@
+const articles = [
+    {
+        id: 1,
+        title: "React 19 Released with Major Performance Improvements",
+        category: "tech",
+        author: "Jane Doe",
+        date: "2026-05-01",
+        summary: "The React team announced version 19 with automatic memoization and a new compiler.",
+        body: "React 19 brings a brand new compiler that automatically optimizes re-renders without the need for useMemo or useCallback. Developers no longer need to manually optimize their components. The update also includes improvements to Suspense, new hooks, and better server-side rendering support.",
+    },
+    {
+        id: 2,
+        title: "Scientists Discover New Earth-Like Planet",
+        category: "science",
+        author: "John Smith",
+        date: "2026-04-28",
+        summary: "Astronomers have found a planet 40 light-years away that could support liquid water.",
+        body: "Using the James Webb Space Telescope, scientists identified a rocky planet orbiting within the habitable zone of its star. The planet, named Kepler-452c, shows signs of an atmosphere and surface temperatures that could allow liquid water. Further observations are planned for 2027.",
+    },
+    {
+        id: 3,
+        title: "Global Stock Markets Hit Record Highs",
+        category: "finance",
+        author: "Sara Lee",
+        date: "2026-04-25",
+        summary: "Major indices surged as inflation data came in lower than expected.",
+        body: "Wall Street celebrated as the S&P 500 and Nasdaq both hit all-time highs following a government report showing inflation dropped to 2.1%. Investors are now betting on interest rate cuts in the second half of 2026, fuelling a broad rally across tech, energy, and consumer sectors.",
+    },
+    {
+        id: 4,
+        title: "Turkey Wins Eurovision Song Contest 2026",
+        category: "culture",
+        author: "Mehmet Yilmaz",
+        date: "2026-04-20",
+        summary: "Turkey secured a historic victory with a record-breaking score at this year's contest.",
+        body: "In a stunning performance in Vienna, Turkey's entry topped the scoreboard with 487 points — the highest in Eurovision history. The win marks Turkey's return to the contest after a long absence and has sparked celebrations across the country.",
+    },
+    {
+        id: 5,
+        title: "Electric Vehicles Now Outsell Petrol Cars in Europe",
+        category: "tech",
+        author: "Anna Klein",
+        date: "2026-04-15",
+        summary: "For the first time, EV sales exceeded internal combustion engine vehicles across the EU.",
+        body: "European automotive data for Q1 2026 shows electric vehicles accounted for 51% of new car registrations. Countries like Norway and the Netherlands lead the transition, while government subsidies and expanding charging infrastructure continue to drive adoption.",
+    },
+    {
+        id: 6,
+        title: "New Study Links Sleep to Brain Health",
+        category: "science",
+        author: "Dr. Emily Ross",
+        date: "2026-04-10",
+        summary: "Researchers find that less than 6 hours of sleep significantly raises dementia risk.",
+        body: "A 10-year study tracking 8,000 adults found that consistently sleeping fewer than 6 hours per night increased the risk of developing dementia by 30%. The researchers recommend 7 to 9 hours of sleep and suggest that sleep quality matters as much as quantity.",
+    },
+];
+
+export default articles;
