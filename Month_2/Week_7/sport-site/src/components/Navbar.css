@@ -1,0 +1,15 @@
+.nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 40px;
+    background: #111;
+    border-bottom: 1px solid #222;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+.logo { font-size: 22px; font-weight: 700; color: #f5a623; text-decoration: none; }
+.nav-links { display: flex; gap: 20px; flex-wrap: wrap; }
+.nav-links a { color: #777; text-decoration: none; font-size: 14px; }
+.nav-links a:hover { color: white; }
+.nav-links .active { color: white; font-weight: 600; }
