@@ -51,7 +51,7 @@ My 5-month roadmap from web fundamentals to a production-ready mobile app.
 - JavaScript & TypeScript fundamentals.
 - HTML structure and React basics.
 
-### Month 2 — Styling & React 
+### Month 2 — Styling & React ✅
 - CSS3 and Flexbox.
 - Advanced React: hooks, props, component architecture.
 
