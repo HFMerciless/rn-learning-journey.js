@@ -20,11 +20,11 @@ const Home = () => {
                     hello world
                 </ThemedText>
             </View>
-            <Link style={styles.button} href="/about">
-                <ThemedText>About Page</ThemedText>
+            <Link style={styles.button} href="/login">
+                <ThemedText>Login Page</ThemedText>
             </Link>
-            <Link style={styles.button} href="/contact">
-                <ThemedText>Contact Page</ThemedText>
+            <Link style={styles.button} href="/register">
+                <ThemedText>Register Page</ThemedText>
             </Link>
         </ThemedView>
     )
