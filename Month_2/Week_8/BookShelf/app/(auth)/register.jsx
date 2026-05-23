@@ -1,6 +1,7 @@
 import {Keyboard, StyleSheet, Text, TouchableWithoutFeedback,} from 'react-native'
 import React from 'react'
 import {Link} from "expo-router";
+import {useUser} from "../../hooks/useUser";
 import {Colors} from "../../Constants/Colors";
 //Components
 import ThemedView from "../../components/ThemedView";
@@ -9,12 +10,17 @@ import ThemedText from "../../components/ThemedText";
 import ThemedButton from "../../components/ThemedButton";
 import ThemedTextInput from "../../components/ThemedTextInput";
 
+
 const Register = () => {
     const [username, setUsername] = React.useState("")
     const [password, setPassword] = React.useState("")
+    const {register} = useUser()
 
-    const handleSubmit = () => {
-        console.log("Register", username, password)
+    const handleSubmit = async () => {
+        try {
+            await register(username, password)
+        } catch (error) {
+        }
     }
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>

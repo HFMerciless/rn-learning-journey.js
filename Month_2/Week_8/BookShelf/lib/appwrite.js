@@ -1,24 +1,11 @@
-import { Client, Account,Avatars, ID } from 'react-native-appwrite';
-import * as SecureStore from 'expo-secure-store';
+import { Client, Account, Avatars } from 'react-native-appwrite';
 
-const client = new Client();
+export const client = new Client();
 
 client
-    .setEndpoint(process.env.EXPO_PUBLIC_APPWRITE_ENDPOINT)
-    .setProject(process.env.EXPO_PUBLIC_APPWRITE_PROJECT_ID)
+    .setEndpoint('https://fra.cloud.appwrite.io/v1')
+    .setProject('6a0c56f70009e43c0c51')
     .setPlatform('com.hf.merciless.bookshelf');
 
 export const account = new Account(client);
-export { ID };
-
-account.setSessionStorage({
-    async getItem(key) {
-        return await SecureStore.getItemAsync(key);
-    },
-    async setItem(key, value) {
-        await SecureStore.setItemAsync(key, value);
-    },
-    async removeItem(key) {
-        await SecureStore.deleteItemAsync(key);
-    },
-});
+export const avatars = new Avatars(client);
