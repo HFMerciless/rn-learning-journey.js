@@ -8,17 +8,22 @@ import ThemedText from '../../components/ThemedText'
 import Spacer from '../../components/Spacer'
 import ThemedButton from '../../components/ThemedButton'
 import ThemedTextInput from "../../components/ThemedTextInput"
+import { Colors } from '../../Constants/Colors'
 
 const Login = () => {
-    const [username, setUsername] = useState("")
+    const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
+    const [error, setError] = useState()
 
-    const { login } = useUser()
+    const { user, login } = useUser()
 
     const handleSubmit = async () => {
+        setError(null)
+
         try {
-            await login(username, password)
+            await login(email, password)
         } catch (error) {
+            setError(error.message)
         }
     }
 
@@ -31,11 +36,15 @@ const Login = () => {
                     Login to Your Account
                 </ThemedText>
 
+                {/* <TextInput placeholder="Email" /> */}
+
                 <Spacer />
                 <ThemedTextInput
                     style={{ marginBottom: 20, width: "80%" }}
-                    placeholder="Username"
-                    onChangeText={setUsername}
+                    placeholder="Email"
+                    value={email}
+                    onChangeText={setEmail}
+                    keyboardType="email-address"
                 />
 
                 <ThemedTextInput
@@ -50,10 +59,13 @@ const Login = () => {
                     <Text style={{ color: '#f2f2f2' }}>Login</Text>
                 </ThemedButton>
 
+                <Spacer />
+                {error && <Text style={styles.error}>{error}</Text>}
+
                 <Spacer height={100} />
                 <Link href="/register" replace>
                     <ThemedText style={{ textAlign: "center" }}>
-                        Register
+                        Register instead
                     </ThemedText>
                 </Link>
 
@@ -74,5 +86,14 @@ const styles = StyleSheet.create({
         textAlign: "center",
         fontSize: 18,
         marginBottom: 30
+    },
+    error: {
+        color: Colors.warning,
+        padding: 10,
+        backgroundColor: '#f5c1c8',
+        borderColor: Colors.warning,
+        borderWidth: 1,
+        borderRadius: 6,
+        marginHorizontal: 10,
     }
 })

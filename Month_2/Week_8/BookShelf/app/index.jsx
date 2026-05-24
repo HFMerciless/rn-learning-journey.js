@@ -1,66 +1,53 @@
-import { StyleSheet, Text, View, Image } from 'react-native'
-import {Link} from "expo-router";
-import ThemedView from "../components/ThemedView";
-import ThemedLogo from "../components/ThemedLogo";
-import Spacer from "../components/Spacer";
-import ThemedText from "../components/ThemedText";
+import { StyleSheet, Text, View } from 'react-native';
+import { Link } from 'expo-router';
+import ThemedView from '../components/ThemedView';
+import ThemedText from '../components/ThemedText';
+import Spacer from '../components/Spacer';
 
-const Home = () => {
+export default function Index() {
     return (
         <ThemedView style={styles.container}>
-            <ThemedLogo source={require('../assets/BookShelf.jpg')} />
-            <Spacer height={15}/>
-            <ThemedText style={styles.title} title={true}>
-                Hello I am HF_Merciless and this is my App
+            <ThemedText title={true} style={styles.title}>
+                The Number 1 Reading List App
             </ThemedText>
-            <Spacer height={20}/>
-            <ThemedText>Welcome to my App</ThemedText>
-            <View style={styles.card}>
-                <ThemedText>
-                    hello world
-                </ThemedText>
-            </View>
-            <Link style={styles.button} href="/login">
-                <ThemedText>Login Page</ThemedText>
+
+            <Spacer height={20} />
+
+            {/* Manual Navigation Links to move around like Net Ninja */}
+            <Link href="/login" style={styles.link}>
+                <Text style={styles.linkText}>Login Page</Text>
             </Link>
-            <Link style={styles.button} href="/register">
-                <ThemedText>Register Page</ThemedText>
-            </Link><Link style={styles.button} href="/profile">
-                <ThemedText>Profile</ThemedText>
+
+            <Link href="/register" style={styles.link}>
+                <Text style={styles.linkText}>Register Page</Text>
+            </Link>
+
+            <Link href="/(dashboard)/books" style={styles.link}>
+                <Text style={styles.linkText}>Profile Page</Text>
             </Link>
         </ThemedView>
-    )
+    );
 }
-
-export default Home
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        alignItems: 'center',
         justifyContent: 'center',
+        alignItems: 'center',
+        padding: 20,
     },
     title: {
-        fontSize: 17,
+        fontSize: 22,
+        textAlign: 'center',
         fontWeight: 'bold',
+        marginBottom: 40,
     },
-    card: {
-        backgroundColor: "#e16565",
-        borderRadius: 5,
-        padding: 10,
-        margin: 10,
-        marginBottom: 20,
-        shadowColor: "#000",
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.25,
-        shadowRadius: 3.84,
-        elevation: 5,
+    link: {
+        marginVertical: 10,
     },
-    button: {
-        padding: 10,
-        backgroundColor: '#488f9f',
-        borderRadius: 4,
-        margin: 5
-
-    }
-})
+    linkText: {
+        color: '#a076f9',
+        fontSize: 16,
+        textDecorationLine: 'underline',
+    },
+});

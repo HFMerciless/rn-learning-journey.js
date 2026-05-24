@@ -11,9 +11,10 @@ export function UserProvider({ children }) {
         try {
             await account.createEmailPasswordSession(email, password)
             const response = await account.get()
-        }
-        catch (error) {
-            console.error(error)
+            setUser(response)
+
+        } catch (error) {
+            throw Error(error.message)
         }
     }
 
@@ -21,14 +22,14 @@ export function UserProvider({ children }) {
         try {
             await account.create(ID.unique(), email, password)
             await login(email, password)
-        }
-        catch (error) {
-            console.error(error)
+        } catch (error) {
+            throw Error(error.message)
         }
     }
 
     async function logout() {
-
+        await account.deleteSession("current")
+        setUser(null)
     }
 
     return (
