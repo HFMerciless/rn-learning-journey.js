@@ -10,18 +10,13 @@ export default function Index() {
             <ThemedText title={true} style={styles.title}>
                 The Number 1 Reading List App
             </ThemedText>
-
             <Spacer height={20} />
-
-            {/* Manual Navigation Links to move around like Net Ninja */}
             <Link href="/login" style={styles.link}>
                 <Text style={styles.linkText}>Login Page</Text>
             </Link>
-
             <Link href="/register" style={styles.link}>
                 <Text style={styles.linkText}>Register Page</Text>
             </Link>
-
             <Link href="/(dashboard)/books" style={styles.link}>
                 <Text style={styles.linkText}>Profile Page</Text>
             </Link>

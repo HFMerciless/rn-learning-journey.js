@@ -19,7 +19,6 @@ const Register = () => {
 
     const handleSubmit = async () => {
         setError(null)
-
         try {
             await register(email, password)
             console.log('current user is: ', user)
@@ -27,17 +26,16 @@ const Register = () => {
             setError(error.message)
         }
     }
-
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <ThemedView style={styles.container}>
-
                 <Spacer />
+
                 <ThemedText title={true} style={styles.title}>
                     Register an Account
                 </ThemedText>
-
                 <Spacer />
+
                 <ThemedTextInput
                     style={{ marginBottom: 20, width: "80%" }}
                     placeholder="Email"
@@ -45,7 +43,6 @@ const Register = () => {
                     onChangeText={setEmail}
                     keyboardType="email-address"
                 />
-
                 <ThemedTextInput
                     style={{ marginBottom: 20, width: "80%" }}
                     placeholder="Password"
@@ -53,26 +50,23 @@ const Register = () => {
                     onChangeText={setPassword}
                     secureTextEntry
                 />
-
                 <ThemedButton onPress={handleSubmit}>
                     <Text style={{ color: '#f2f2f2' }}>Register</Text>
                 </ThemedButton>
-
                 <Spacer />
-                {error && <Text style={styles.error}>{error}</Text>}
 
+                {error && <Text style={styles.error}>{error}</Text>}
                 <Spacer height={100} />
+
                 <Link href="/login" replace>
                     <ThemedText style={{ textAlign: "center" }}>
                         Login instead
                     </ThemedText>
                 </Link>
-
             </ThemedView>
         </TouchableWithoutFeedback>
     )
 }
-
 export default Register
 
 const styles = StyleSheet.create({

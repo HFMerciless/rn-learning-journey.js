@@ -30,15 +30,13 @@ const Login = () => {
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <ThemedView style={styles.container}>
-
                 <Spacer />
+
                 <ThemedText title={true} style={styles.title}>
                     Login to Your Account
                 </ThemedText>
-
-                {/* <TextInput placeholder="Email" /> */}
-
                 <Spacer />
+
                 <ThemedTextInput
                     style={{ marginBottom: 20, width: "80%" }}
                     placeholder="Email"
@@ -46,7 +44,6 @@ const Login = () => {
                     onChangeText={setEmail}
                     keyboardType="email-address"
                 />
-
                 <ThemedTextInput
                     style={{ marginBottom: 20, width: "80%" }}
                     placeholder="Password"
@@ -54,26 +51,23 @@ const Login = () => {
                     onChangeText={setPassword}
                     secureTextEntry
                 />
-
                 <ThemedButton onPress={handleSubmit}>
                     <Text style={{ color: '#f2f2f2' }}>Login</Text>
                 </ThemedButton>
-
                 <Spacer />
-                {error && <Text style={styles.error}>{error}</Text>}
 
+                {error && <Text style={styles.error}>{error}</Text>}
                 <Spacer height={100} />
+
                 <Link href="/register" replace>
                     <ThemedText style={{ textAlign: "center" }}>
                         Register instead
                     </ThemedText>
                 </Link>
-
             </ThemedView>
         </TouchableWithoutFeedback>
     )
 }
-
 export default Login
 
 const styles = StyleSheet.create({

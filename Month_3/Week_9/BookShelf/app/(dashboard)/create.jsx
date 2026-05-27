@@ -7,7 +7,6 @@ import ThemedView from "../../components/ThemedView"
 const Create = () => {
     return (
         <ThemedView style={styles.container}>
-
             <ThemedText title={true} style={styles.heading}>
                 Add a New Book
             </ThemedText>
