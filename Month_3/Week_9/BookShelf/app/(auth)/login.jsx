@@ -1,5 +1,5 @@
 import { StyleSheet, Text, Keyboard, TouchableWithoutFeedback } from 'react-native'
-import { Link } from 'expo-router'
+import { Link, useRouter } from 'expo-router'
 import { useState } from 'react'
 import { useUser } from '../../hooks/useUser'
 
@@ -16,13 +16,20 @@ const Login = () => {
     const [error, setError] = useState()
 
     const { user, login } = useUser()
+    const router = useRouter()
 
     const handleSubmit = async () => {
         setError(null)
-
+        console.log("➡️ BUTTON CLICKED: Starting login flow...")
         try {
             await login(email, password)
+            console.log("✅ STEP 1 SUCCESS: Appwrite session created!")
+
+            console.log("🔀 STEP 2: Attempting hard redirect to books screen...")
+            router.replace("/(dashboard)/books")
+
         } catch (error) {
+            console.log("❌ FLOW CRASHED: Error is ->", error.message)
             setError(error.message)
         }
     }

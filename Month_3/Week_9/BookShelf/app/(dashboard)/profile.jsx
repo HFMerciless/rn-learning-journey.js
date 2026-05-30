@@ -19,7 +19,7 @@ const Profile = () => {
             <ThemedText>Time to start reading some books...</ThemedText>
             <Spacer />
 
-            <ThemedButton onPress={logout} style={styles.button}>
+            <ThemedButton onPress={logout}>
                 <Text style={{ color: '#f2f2f2' }}>Logout</Text>
             </ThemedButton>
         </ThemedView>

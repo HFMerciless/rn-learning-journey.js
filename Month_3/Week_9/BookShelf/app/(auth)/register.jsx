@@ -1,5 +1,5 @@
 import { Keyboard, StyleSheet, Text, TouchableWithoutFeedback } from 'react-native'
-import { Link } from 'expo-router'
+import { Link, useRouter } from 'expo-router'
 import { useState } from 'react'
 import { useUser } from '../../hooks/useUser'
 
@@ -16,13 +16,18 @@ const Register = () => {
     const [error, setError] = useState(null)
 
     const { user, register } = useUser()
+    const router = useRouter()
 
     const handleSubmit = async () => {
         setError(null)
+        console.log("➡️ REGISTER CLICKED: Sending to Appwrite...")
         try {
             await register(email, password)
-            console.log('current user is: ', user)
+            console.log('✅ Registration successful!')
+
+            router.replace("/(dashboard)/books")
         } catch (error) {
+            console.log("❌ REGISTRATION FAILED:", error.message)
             setError(error.message)
         }
     }
