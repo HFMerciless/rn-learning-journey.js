@@ -10,6 +10,8 @@ import ThemedButton from '../../components/ThemedButton'
 import ThemedTextInput from "../../components/ThemedTextInput"
 import { Colors } from '../../Constants/Colors'
 
+//ToDo: UI Enchantments
+
 const Login = () => {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
