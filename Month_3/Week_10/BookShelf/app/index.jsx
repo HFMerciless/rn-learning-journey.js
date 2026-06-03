@@ -6,6 +6,7 @@ import ThemedView from '../components/ThemedView';
 import ThemedText from '../components/ThemedText';
 import ThemedLogo from '../components/ThemedLogo'; // 👈 1. ADDED THIS IMPORT
 import Spacer from '../components/Spacer';
+import {Colors} from "../Constants/Colors";
 
 export default function Index() {
     const router = useRouter();
@@ -68,8 +69,11 @@ const styles = StyleSheet.create({
         marginVertical: 8,
     },
     linkText: {
-        color: '#a076f9',
+        color: '#ffffff',
         fontSize: 16,
-        textDecorationLine: 'underline',
+        backgroundColor: Colors.primary,
+        padding: 10,
+        borderRadius: 10,
+        borderStyle : 'solid',
     },
 });
