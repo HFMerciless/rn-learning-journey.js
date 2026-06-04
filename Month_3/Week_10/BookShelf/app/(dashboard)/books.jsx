@@ -8,6 +8,15 @@ const Books = () => {
             <ThemedText title={true} style={styles.heading}>
                 Your Reading List
             </ThemedText>
+            <ThemedText style={{ padding:20, fontSize: 16 }}>
+                1. The Hunger Games
+            </ThemedText>
+            <ThemedText style={{ padding:20, fontSize: 16 }}>
+                2. Hobbit
+            </ThemedText>
+            <ThemedText style={{ padding:20, fontSize: 16 }}>
+                3. The Hunger Games
+            </ThemedText>
         </ThemedView>
     )
 }

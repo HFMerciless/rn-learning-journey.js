@@ -3,13 +3,16 @@ import { StyleSheet } from 'react-native'
 import Spacer from "../../components/Spacer"
 import ThemedText from "../../components/ThemedText"
 import ThemedView from "../../components/ThemedView"
+import ThemedButton from "../../components/ThemedButton";
 
 const Create = () => {
     return (
         <ThemedView style={styles.container}>
-            <ThemedText title={true} style={styles.heading}>
+            <ThemedButton title={true} style={styles.heading}>
+                <ThemedText>
                 Add a New Book
-            </ThemedText>
+                </ThemedText>
+            </ThemedButton>
             <Spacer />
 
         </ThemedView>
