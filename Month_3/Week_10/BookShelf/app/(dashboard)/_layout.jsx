@@ -1,11 +1,26 @@
-import { Tabs } from "expo-router"
+import { Tabs, useRouter } from "expo-router"
 import { useColorScheme } from "react-native"
+import { useEffect } from "react"
 import { Colors } from "../../Constants/Colors"
 import { Ionicons } from "@expo/vector-icons"
+import { useUser } from "../../hooks/useUser"
 
 export default function DashboardLayout() {
     const colorScheme = useColorScheme()
     const theme = Colors[colorScheme] ?? Colors.light
+    const { authState } = useUser()
+    const router = useRouter()
+
+    useEffect(() => {
+        if (authState === "unauthenticated") {
+            console.log("🔒 Dashboard Guard: Unauthenticated user. Redirecting to login...");
+            router.replace("/(auth)/login");
+        }
+    }, [authState]);
+
+    if (authState === "loading" || authState === "idle") {
+        return null;
+    }
 
     return (
         <Tabs
