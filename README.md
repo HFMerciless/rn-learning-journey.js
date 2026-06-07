@@ -55,12 +55,12 @@ My 5-month roadmap from web fundamentals to a production-ready mobile app.
 - CSS3 and Flexbox.
 - Advanced React: hooks, props, component architecture.
 
-### Month 3 — React Native & Expo
+### Month 3 — React Native & Expo ✅
 - Transition from web to native.
 - Mobile UI/UX and navigation.
 
 ### Month 4 — Data & State
-- Firebase authentication and Firestore.
+- Appwrite authentication, database and TanStack Query.
 - Global state with Zustand.
 
 ### Month 5 — Budget Tracker App 📱
