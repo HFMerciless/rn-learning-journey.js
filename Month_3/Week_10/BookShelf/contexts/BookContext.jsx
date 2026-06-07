@@ -28,7 +28,13 @@ export function BookProvider({ children }) {
 
     async function fetchBookById(id) {
         try {
-            return await databases.getDocument(DATABASE_ID, COLLECTION_ID, id)
+            const response = await databases.getDocument(
+                DATABASE_ID,
+                COLLECTION_ID,
+                id
+            )
+            return (
+                response)
         } catch (error) {
             throw Error(error.message)
         }

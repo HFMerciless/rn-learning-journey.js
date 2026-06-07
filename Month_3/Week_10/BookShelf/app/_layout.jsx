@@ -1,28 +1,40 @@
 import { Stack } from "expo-router"
 import { Colors } from "../Constants/Colors"
-import { useColorScheme } from "react-native"
 import { StatusBar } from "expo-status-bar"
 import { UserProvider } from "../contexts/UserContext"
-import {BookProvider} from "../contexts/BookContext";
+import { BookProvider } from "../contexts/BookContext"
+import { ThemeProvider, useTheme } from "../contexts/ThemeContext"
 
-export default function RootLayout() {
-    const colorScheme = useColorScheme()
-    const theme = Colors[colorScheme] ?? Colors.light
+function AppContent() {
+    const { theme: currentTheme } = useTheme()
+    const themeStyles = Colors[currentTheme] ?? Colors.light
 
     return (
-        <UserProvider>
-            <BookProvider>
-            <StatusBar style="auto" />
-            <Stack screenOptions={{
-                headerStyle: { backgroundColor: theme.navBackground },
-                headerTintColor: theme.title,
-            }}>
-                <Stack.Screen name="index" options={{ title: "Home" }} />
+        <>
+            <StatusBar style={currentTheme === 'dark' ? 'light' : 'dark'} />
 
-                <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-                <Stack.Screen name="(dashboard)" options={{ headerShown: false }} />
+            {/* ✅ FIXED: Set headerShown: false so the main root layout doesn't create a double navigation top bar */}
+            <Stack screenOptions={{
+                headerShown: false,
+                headerStyle: { backgroundColor: themeStyles.navBackground },
+                headerTintColor: themeStyles.title,
+            }}>
+                <Stack.Screen name="index" />
+                <Stack.Screen name="(auth)" />
+                <Stack.Screen name="(dashboard)" />
             </Stack>
-            </BookProvider>
-        </UserProvider>
+        </>
+    )
+}
+
+export default function RootLayout() {
+    return (
+        <ThemeProvider>
+            <UserProvider>
+                <BookProvider>
+                    <AppContent />
+                </BookProvider>
+            </UserProvider>
+        </ThemeProvider>
     )
 }

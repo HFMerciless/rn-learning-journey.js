@@ -1,9 +1,10 @@
-import { TextInput, useColorScheme } from 'react-native'
+import { TextInput } from 'react-native'
 import { Colors } from '../Constants/Colors'
+import { useTheme } from '../contexts/ThemeContext' // ✅ FIXED: Import custom theme hook
 
 export default function ThemedTextInput({ style, ...props }) {
-    const colorScheme = useColorScheme()
-    const theme = Colors[colorScheme] ?? Colors.light
+    const { theme: currentTheme } = useTheme() // ✅ FIXED: Read custom theme state
+    const theme = Colors[currentTheme] ?? Colors.light
 
     return (
         <TextInput
@@ -16,6 +17,7 @@ export default function ThemedTextInput({ style, ...props }) {
                 },
                 style
             ]}
+            placeholderTextColor={currentTheme === 'dark' ? '#777' : '#aaa'} // Optional: makes placeholder legible in both modes
             {...props}
         />
     )
