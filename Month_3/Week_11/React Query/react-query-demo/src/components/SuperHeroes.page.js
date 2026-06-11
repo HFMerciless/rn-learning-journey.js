@@ -1,37 +1,30 @@
 import { useState, useEffect } from 'react'
-import axios from 'axios'
+// We import your JSON array directly from the folder above src/
+import mockData from '../db.json'
 
 export const SuperHeroesPage = () => {
     const [isLoading, setIsLoading] = useState(true)
     const [data, setData] = useState([])
-    const [error, setError] = useState('')
 
     useEffect(() => {
-        axios
-            .get('http://localhost:4000/superheroes') // added the hyphen here
-            .then(res => {
-                setData(res.data)
-                setIsLoading(false)
-            })
-            .catch(error => {
-                setError(error.message)
-                setIsLoading(false)
-            })
+        // We simulate a tiny network delay so you can still see the loading state!
+        const timer = setTimeout(() => {
+            setData(mockData.superheroes)
+            setIsLoading(false)
+        }, 500)
+
+        return () => clearTimeout(timer)
     }, [])
 
     if (isLoading) {
         return <h2>Loading...</h2>
     }
 
-    if (error) {
-        return <h2>{error}</h2>
-    }
-
     return (
         <>
             <h2>Super Heroes Page</h2>
             {data.map(hero => {
-                return <div key={hero.name}>{hero.name}</div>
+                return <div key={hero.id}>{hero.name}</div>
             })}
         </>
     )
