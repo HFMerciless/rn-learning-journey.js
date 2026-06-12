@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react'
 // We import your JSON array directly from the folder above src/
 import mockData from '../db.json'
 
+//ToDo: Fetch data with useQuery
+
 export const SuperHeroesPage = () => {
     const [isLoading, setIsLoading] = useState(true)
     const [data, setData] = useState([])
