@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react'
-// We import your JSON array directly from the folder above src/
 import mockData from '../db.json'
 
 //ToDo: Fetch data with useQuery
@@ -9,7 +8,6 @@ export const SuperHeroesPage = () => {
     const [data, setData] = useState([])
 
     useEffect(() => {
-        // We simulate a tiny network delay so you can still see the loading state!
         const timer = setTimeout(() => {
             setData(mockData.superheroes)
             setIsLoading(false)
