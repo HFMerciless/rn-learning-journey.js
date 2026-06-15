@@ -13,11 +13,9 @@ export const SuperHeroesPage = () => {
 
         return () => clearTimeout(timer)
     }, [])
-
     if (isLoading) {
         return <h2>Loading...</h2>
     }
-
     return (
         <>
             <h2>Super Heroes Page</h2>
