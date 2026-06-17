@@ -1,17 +1,26 @@
-import { useQuery } from "@tanstack/react-query"
-import axios from "axios"
+import { useQuery } from 'react-query'
+import mockData from '../db.json'
 
 export const RQSuperHeroesPage = () => {
-    const {isLoading, Data} = useQuery('super-heroes', ()=>{
-        return axios.get('https://superheroapi.com/api.php/11222222222222222222222222222222/search/superheroes')
+    const { isLoading, data, isError, error } = useQuery({
+        queryKey: ['super-heroes'],
+        queryFn: () => {
+            return Promise.resolve(mockData.superheroes)
+        }
     })
-    if(isLoading) {
+
+    if (isLoading) {
         return <h2>Loading...</h2>
     }
+
+    if (isError) {
+        return <h2>{error.message || 'Something went wrong'}</h2>
+    }
+
     return (
         <>
             <h2>RQ Super Heroes Page</h2>
-            {Data?.data.results.map(hero => {
+            {data?.map(hero => {
                 return <div key={hero.id}>{hero.name}</div>
             })}
         </>
