@@ -2,8 +2,6 @@ import './App.css'
 import { useEffect, useState } from "react"
 import axios from "axios"
 
-// ToDo: SIT AND WORK LIKE A DOG
-
 function App() {
   const [data, setData] = useState([])
 
