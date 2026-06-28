@@ -1,5 +1,7 @@
 const BASE_URL = "https://jsonplaceholder.typicode.com"
 
 const getTodos = async () => {
-    return()
+    return(
+        await fetch(`${BASE_URL}/todos`)
+    )
 }
