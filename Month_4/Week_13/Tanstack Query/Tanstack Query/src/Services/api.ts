@@ -1,7 +1,11 @@
-const BASE_URL = "https://jsonplaceholder.typicode.com"
+import axios from "axios";
+import {Todo} from "../Types/todo";
 
-const getTodos = async () => {
-    return(
-        await fetch(`${BASE_URL}/todos`)
-    )
+const BASE_URL = "https://localhost:8080"
+const axiosInstance = axios.create({
+    baseURL: BASE_URL
+})
+
+export const getTodos = async () => {
+    return(await axiosInstance.get<Todo[]>("/todos")).data.map((todo) => todo.id)
 }
