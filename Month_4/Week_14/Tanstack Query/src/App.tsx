@@ -2,7 +2,6 @@ import { useEffect, useState } from "react"
 import axios from "axios"
 
 //ToDo: Finish the project.
-
 function App() {
   const [data, setData] = useState([])
 
