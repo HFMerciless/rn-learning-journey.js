@@ -4,6 +4,7 @@ import {getTodos} from "./api";
 export function useTodosIds() {
     return useQuery({
         queryKey: ["todos"],
-        queryFn: getTodos
+        queryFn: getTodos,
+        refetchOnWindowFocus: false
     })
 }
