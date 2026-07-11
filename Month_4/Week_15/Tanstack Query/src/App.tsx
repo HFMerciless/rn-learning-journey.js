@@ -4,6 +4,6 @@ function App() {
   return <Todo/>
 }
 
-//ToDo: Debug the project.
+//ToDo: Finish the project.
 
 export default App
