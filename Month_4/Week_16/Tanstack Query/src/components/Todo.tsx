@@ -1,16 +1,15 @@
 import {useTodosIds} from "../services/queries.ts";
+//import {useIsFetching} from "@tanstack/react-query";
 
 export default function Todo() {
     const todosIdsQuery = useTodosIds();
+    //const isFetching = useIsFetching();
 
-    if (todosIdsQuery.isPending) {
-        return <span>Loading...</span>;
-    }
-    if (todosIdsQuery.isError) {
-        return <span>Error</span>;
-    }
     return <>
-        {todosIdsQuery.data.map((id) => (
+        {/*<p>Current query function status : {todosIdsQuery.fetchStatus}</p>
+        <p>Query data status : {todosIdsQuery.status}</p>
+        <p>Global isFetching : {isFetching}</p>*/}
+        {todosIdsQuery.data?.map((id) => (
             <p key={id}>{id}</p>
         ))}
     </>
