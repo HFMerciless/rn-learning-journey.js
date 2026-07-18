@@ -19,6 +19,8 @@ export default function Todos() {
                 <input placeholder="title" {...register("title")}/>
                 <br/>
                 <input placeholder="description" {...register("description")}/>
+                <br/>
+                <input type="submit"/>
             </form>
             <ul>
                 {todosQueries.map(({ data, isLoading }, index) => {
