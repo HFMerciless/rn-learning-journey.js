@@ -59,7 +59,7 @@ My 5-month roadmap from web fundamentals to a production-ready mobile app.
 - Transition from web to native.
 - Mobile UI/UX and navigation.
 
-### Month 4 — Data & State
+### Month 4 — Data & State ✅
 - Appwrite authentication, database and TanStack Query.
 - Global state with Zustand.
 
