@@ -1,0 +1,1 @@
+Started planning My Accountant app. Researched similar budget tracker apps for inspiration. Sketched rough screen flow on paper.
