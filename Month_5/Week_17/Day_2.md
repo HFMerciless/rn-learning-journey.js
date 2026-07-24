@@ -1,0 +1,1 @@
+Spent time designing Appwrite collection structure. Decided on transaction attributes: amount, category, date, type, notes, userId.
