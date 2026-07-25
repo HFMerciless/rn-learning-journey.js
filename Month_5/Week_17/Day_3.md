@@ -1,0 +1,1 @@
+Mapped out screen hierarchy with Expo Router. Auth group, dashboard tabs, transaction detail screen.
