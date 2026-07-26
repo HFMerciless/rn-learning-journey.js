@@ -1,0 +1,1 @@
+Looked into design references for budget apps. Listed reusable components needed before starting to code.
