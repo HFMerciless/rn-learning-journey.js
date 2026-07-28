@@ -1,0 +1,1 @@
+Planned login and register screens. Reviewed BookShelf auth implementation to reuse patterns in My Accountant.
