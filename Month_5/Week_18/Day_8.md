@@ -1,0 +1,1 @@
+Connect the auth sytem with the Appwrite server and create a user.
