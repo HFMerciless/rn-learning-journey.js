@@ -1,0 +1,1 @@
+Built a temporary profile page to logout the user.
