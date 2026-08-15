@@ -1,0 +1,1 @@
+Adding forgot password and recovery email functionality.
